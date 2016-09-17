@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2013-2016, ARM Limited, All Rights Reserved
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "uvisor-lib/uvisor-lib.h"
 #include "mbed.h"
 #include "main-hw.h"
@@ -20,7 +36,13 @@ UVISOR_BOX_CONFIG(my_box, acl, UVISOR_BOX_STACK_SIZE, my_box_context);
 
 static void my_box_switch_irq(void)
 {
+    /* flip LED state */
     *uvisor_ctx->led = !*uvisor_ctx->led;
+
+    /* print LED state on serial port */
+    uvisor_ctx->pc->printf(
+        "\nPressed SW2, printing from interrupt - LED changed to %i\n\n",
+        (int)(*uvisor_ctx->led));
 }
 
 static void my_box_main(const void *)
@@ -30,6 +52,8 @@ static void my_box_main(const void *)
     RawSerial *pc;    
     if(!(pc = new RawSerial(USBTX, USBRX)))
         return;
+    /* remember serial driver for IRQ routine */
+    uvisor_ctx->pc = pc;
 
     /* allocate a box-specific LED */
     if(!(uvisor_ctx->led = new DigitalOut(SECURE_LED)))
