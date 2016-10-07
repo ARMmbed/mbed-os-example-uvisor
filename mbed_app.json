@@ -3,6 +3,10 @@
         "K64F": {
             "target.features_add": ["UVISOR"],
             "target.extra_labels_add": ["UVISOR_SUPPORTED"]
+        },
+        "DISCO_F429ZI": {
+            "target.features_add": ["UVISOR"],
+            "target.extra_labels_add": ["UVISOR_SUPPORTED"]
         }
     },
     "macros": [
