@@ -31,7 +31,7 @@ $ screen /dev/tty.usbmodem1422 9600
 You will see an output similar to the following one (assuming you press the user button after 4 loops count):
 
 ```
-**** IRQ blinky uvisor-rtos example *****
+**** IRQ blinky uVisor example *****
 Main loop count: 0
 Main loop count: 1
 Main loop count: 2
