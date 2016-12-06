@@ -23,22 +23,21 @@ MAIN_ACL(g_main_acl);
 
 /* Enable uVisor. */
 UVISOR_SET_MODE_ACL(UVISOR_ENABLED, g_main_acl);
-UVISOR_SET_PAGE_HEAP(8*1024, 5);
+UVISOR_SET_PAGE_HEAP(8 * 1024, 5);
 
 int main(void)
 {
-    DigitalOut led1(MAIN_LED);
+    DigitalOut led(MAIN_LED);
 
     printf("\r\n***** IRQ blinky uvisor-rtos example *****\r\n");
 
     size_t count = 0;
 
-    while (1)
-    {
+    while (1) {
         printf("Main loop count: %d\r\n", count++);
-        led1 = !led1;
+        led = !led;
 
-        /* blink once per second */
+        /* Blink once per second. */
         Thread::wait(500);
     }
 
