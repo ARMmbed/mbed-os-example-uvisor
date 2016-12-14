@@ -70,12 +70,25 @@ static void my_box_main(const void *)
         if (!(uvisor_ctx->sw = new InterruptIn(SECURE_SWITCH))) {
             pc->printf("ERROR: failed to allocate memories for switch\r\n");
         } else {
+#if !defined(TARGET_MPS2)
             /* Register handler for switch. */
             uvisor_ctx->sw->mode(SECURE_SWITCH_PULL);
             uvisor_ctx->sw->fall(my_box_switch_irq);
 
             /* No problem to return here as everything is initialized. */
             return;
+#else /* !defined(TARGET_MPS2) */
+            /* Register handle for generic IRQ. */
+            NVIC_SetVector(TOUCHSCREEN_IRQn, (uint32_t) &my_box_switch_irq);
+            NVIC_ClearPendingIRQ(TOUCHSCREEN_IRQn);
+            NVIC_EnableIRQ(TOUCHSCREEN_IRQn);
+
+            /* Trigger IRQ periodically. */
+            while (1) {
+                NVIC_SetPendingIRQ(TOUCHSCREEN_IRQn);
+                Thread::wait(10000);
+            }
+#endif /* !defined(TARGET_MPS2) */
         }
         delete uvisor_ctx->led;
     }
