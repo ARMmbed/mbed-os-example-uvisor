@@ -4,50 +4,124 @@ This is a simple example to show how to write a uVisor-secured threaded applicat
 
 Supported devices:
 
-| Target | Toolchain | Public box LED | Secure box LED | User button | Baud rate |
-|--------|-----------|----------------|----------------|-------------|-----------|
-| `K64F` | `GCC_ARM` | `LED_BLUE`     | `LED_RED`      | `SW2`       | 9600      |
+| Target              | Toolchain | Public box LED | Secure box LED | User button             | Baud rate    |
+|---------------------|-----------|----------------|----------------|-------------------------|--------------|
+| `ARM_MPS2_ARMv8MML` | `GCC_ARM` | See `stdout`   | See `stdout`   | Triggered automatically | See `stdout` |
 
-Latest release: [mbed-os-5.3.0](https://github.com/ARMmbed/mbed-os-example-uvisor/releases/tag/mbed-os-5.3.0). Tested with [mbed-cli v1.0.0](https://github.com/ARMmbed/mbed-cli/releases/tag/1.0.0).
+Latest release: [uvisor-v8m-epr](https://github.com/ARMmbed/mbed-os-example-uvisor/releases/tag/uvisor-v8m-epr). Tested with [mbed-cli v1.0.0](https://github.com/ARMmbed/mbed-cli/releases/tag/1.0.0).
+
+## Caveats
+
+* This is a ARMv8-M specific example, and only works on an ARMv8-M FastModel. For the officially supported example, please use the [master branch](https://github.com/ARMmbed/mbed-os-example-uvisor).
+* The ARMv8-M target requires GCC 5.4.1 20160919 or higher.
+* The ARMv8-M target used via our FastModel binary cannot show LED output. Refer to `stdout` instead.
+
+For a complete list of ARMv8-M-specific known issue, check out the [uvisor-tests-v8m README](https://github.com/ARMmbed/uvisor-tests-v8m/tree/dev/v8m#caveats).
 
 ## Quickstart
 
-For a release build, please enter:
+First, in order to use the ARMv8-M target you need to setup our Docker'ized FastModel. This allows you to use the FastModel as a self-contained binary on both Linux and macOS. First, clone the FastModel repository:
 
 ```bash
-$ mbed compile -m K64F -t GCC_ARM -c
+$ mkdir -p ~/code
+$ cd ~/code
+$ git clone git@github.com:ARMmbed/uvisor-fastmodel-testing
+$ cd uvisor-fastmodel-testing
 ```
 
-You will find the resulting binary in `BUILD/K64F/GCC_ARM/mbed-os-example-uvisor.bin`. You can drag and drop it onto your board USB drive.
+If you have git-lfs installed, the clone operation will have fetched the Docker image, otherwise you need to visit [this link](https://github.com/ARMmbed/uvisor-fastmodel-testing/blob/master/mbed-v8m.tar.xz) and download it manually:
 
-Press the reset button. You will see the public box LED blinking. Whenever you press the user button, the secure box LED will toggle. This interrupt is being served in the secure box and cannot be tampered with by the public box.
+[https://github.com/ARMmbed/uvisor-fastmodel-testing/blob/master/mbed-v8m.tar.xz](https://github.com/ARMmbed/uvisor-fastmodel-testing/blob/master/mbed-v8m.tar.xz)
 
-If you want, you can also read the output on the serial port:
+Once the Docker image has been downloaded, load it via Docker:
 
 ```bash
-$ screen /dev/tty.usbmodem1422 9600
+$ docker load -i mbed-v8m.tar.xz
 ```
 
-You will see an output similar to the following one (assuming you press the user button after 4 loops count):
+You can verify that it has been loaded correctly by running `docker images`:
+
+```bash
+REPOSITORY   TAG      IMAGE ID       CREATED      SIZE
+mbed-v8m     latest   402206ca9a0b   2 days ago   108.7 MB
+```
+
+Run our provided script to create links to the Docker'ized fastmodel binaries and then add them to your path:
+
+```bash
+$ docker/tools/link_binaries.sh
+$ export PATH=$PATH:$HOME/code/uvisor-fastmodel-testing/docker/bin
+```
+
+You can verify that the path is set correctly by running:
+
+```bash
+$ which simulate
+~/uvisor-fastmodel-testing/docker/bin/simulate
+```
+
+Finally, you can clone this repository, select the `dev/v8m` branch, and build the example app:
+
+```bash
+$ cd ~/code
+$ git clone git@github.com:ARMmbed/mbed-os-example-uvisor
+$ cd mbed-os-example-uvisor
+$ git checkout dev/v8m
+$ mbed deploy
+
+# For a release build:
+$ mbed compile -m ARM_MPS2_ARMv8MML -t GCC_ARM -c
+
+# For a debug build:
+$ mbed compile -m ARM_MPS2_ARMv8MML -t GCC_ARM -c --profile mbed-os/tools/profiles/debug.json
+```
+
+You will find the resulting ELF file in `BUILD/ARM_MPS2_ARMv8MML/GCC_ARM/mbed-os-example-uvisor.elf`.
+
+To execute the example, simply run:
+
+```bash
+$ simulate FVP_MPS2_Cortex-M33 BUILD/ARM_MPS2_ARMv8MML/GCC_ARM/mbed-os-example-uvisor.elf
+```
+
+You can observe the serial output in `stdout` from the `simulate` command. You will see an output similar to the following one:
 
 ```
-**** IRQ blinky uvisor-rtos example *****
+Model selected: FVP_MPS2_Cortex-M33.
+Window could not be created! SDL Error: No available video device
+Simulation is started
+
+***** IRQ blinky uvisor-rtos example *****
 Main loop count: 0
+
+Pressed switch, printing from interrupt - LED changed to 1
+
 Main loop count: 1
 Main loop count: 2
 Main loop count: 3
-
-Pressed SW2, printing from interrupt - LED changed to 0
-
 Main loop count: 4
 Main loop count: 5
+Main loop count: 6
+Main loop count: 7
+Main loop count: 8
+Main loop count: 9
+Main loop count: 10
+Main loop count: 11
+Main loop count: 12
+Main loop count: 13
+Main loop count: 14
+Main loop count: 15
+Main loop count: 16
+Main loop count: 17
+Main loop count: 18
+Main loop count: 19
+Main loop count: 20
+
+Pressed switch, printing from interrupt - LED changed to 0
+
+Main loop count: 21
+Main loop count: 22
 ...
 ```
 
-### Debug
-
-When a debugger is connected, you can observe debug output from uVisor. Please note that these messages are sent through semihosting, which halts the program execution if a debugger is not connected. For more information please read the [Debugging uVisor on mbed OS](https://github.com/ARMmbed/uvisor/blob/master/docs/api/DEBUGGING.md) guide. To build a debug version of this example, please enter:
-
-```bash
-$ mbed compile -m K64F -t GCC_ARM --profile mbed-os/tools/profiles/debug.json -c
-```
+You can interrupt the simulation by pressing Ctrl+C.
