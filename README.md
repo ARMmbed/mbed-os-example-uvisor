@@ -23,3 +23,5 @@ When a debugger is connected, you can observe debug output from uVisor. Please n
 ```bash
 $ mbed compile -m K64F -t GCC_ARM --profile mbed-os/tools/profiles/debug.json -c
 ```
+
+do not merge change
