@@ -30,7 +30,7 @@ static const UvisorBoxAclItem acl[] = {
 static void my_box_main(const void *);
 
 UVISOR_BOX_NAMESPACE(NULL);
-UVISOR_BOX_HEAPSIZE(8192);
+UVISOR_BOX_HEAPSIZE(2048);
 UVISOR_BOX_MAIN(my_box_main, osPriorityNormal, UVISOR_BOX_STACK_SIZE);
 UVISOR_BOX_CONFIG(my_box, acl, UVISOR_BOX_STACK_SIZE, my_box_context);
 

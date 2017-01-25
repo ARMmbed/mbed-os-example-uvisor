@@ -23,7 +23,7 @@ MAIN_ACL(g_main_acl);
 
 /* Enable uVisor. */
 UVISOR_SET_MODE_ACL(UVISOR_ENABLED, g_main_acl);
-UVISOR_SET_PAGE_HEAP(8*1024, 5);
+UVISOR_SET_PAGE_HEAP(4*1024, 5);
 
 int main(void)
 {
