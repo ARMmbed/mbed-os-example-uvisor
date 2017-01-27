@@ -4,13 +4,16 @@ This is a simple example to show how to write a uVisor-secured threaded applicat
 
 Supported devices:
 
-| Target | Toolchain | Public box LED | Secure box LED | User button | Baud rate |
-|--------|-----------|----------------|----------------|-------------|-----------|
-| `K64F` | `GCC_ARM` | `LED_BLUE`     | `LED_RED`      | `SW2`       | 9600      |
+| Target         | Toolchain | Public box LED | Secure box LED | User button   | Baud rate |
+|----------------|-----------|----------------|----------------|---------------|-----------|
+| `K64F`         | `GCC_ARM` | `LED_BLUE`     | `LED_RED`      | `SW2`         | 9600      |
+| `DISCO_F429ZI` | `GCC_ARM` | `LED1`         | `LED2`         | `USER_BUTTON` | 9600      |
 
 Latest release: [mbed-os-5.3.0](https://github.com/ARMmbed/mbed-os-example-uvisor/releases/tag/mbed-os-5.3.0). Tested with [mbed-cli v1.0.0](https://github.com/ARMmbed/mbed-cli/releases/tag/1.0.0).
 
 ## Quickstart
+
+The instructions here are specific to the `K64F` target, but can be easily extended to other supported targets as well.
 
 For a release build, please enter:
 
@@ -37,7 +40,7 @@ Main loop count: 1
 Main loop count: 2
 Main loop count: 3
 
-Pressed SW2, printing from interrupt - LED changed to 0
+Pressed switch, printing from interrupt - LED changed to 0
 
 Main loop count: 4
 Main loop count: 5
