@@ -29,53 +29,54 @@ static const UvisorBoxAclItem acl[] = {
 
 static void my_box_main(const void *);
 
+/* Box configuration
+ * We need 1kB of stack both in the main and interrupt threads as both of them
+ * use printf. */
 UVISOR_BOX_NAMESPACE(NULL);
-UVISOR_BOX_HEAPSIZE(8192);
-UVISOR_BOX_MAIN(my_box_main, osPriorityNormal, UVISOR_BOX_STACK_SIZE);
-UVISOR_BOX_CONFIG(my_box, acl, UVISOR_BOX_STACK_SIZE, my_box_context);
+UVISOR_BOX_HEAPSIZE(3072);
+UVISOR_BOX_MAIN(my_box_main, osPriorityNormal, 1024);
+UVISOR_BOX_CONFIG(my_box, acl, 1024, my_box_context);
 
 static void my_box_switch_irq(void)
 {
-    /* flip LED state */
+    /* Flip LED state. */
     *uvisor_ctx->led = !*uvisor_ctx->led;
 
-    /* print LED state on serial port */
-    uvisor_ctx->pc->printf(
-        "\nPressed SW2, printing from interrupt - LED changed to %i\n\n",
-        (int)(*uvisor_ctx->led));
+    /* Print LED state on serial port. */
+    uvisor_ctx->pc->printf("\r\nPressed switch, printing from interrupt - LED changed to %i\r\n\r\n",
+                           (int) (*uvisor_ctx->led));
 }
 
 static void my_box_main(const void *)
 {
-    /* allocate serial port to ensure that code in this secure box
-     * won't touch handle in the default security context when printing */
-    RawSerial *pc;    
-    if(!(pc = new RawSerial(USBTX, USBRX)))
+    /* Allocate the serial port to ensure that code in this secure box won't
+     * touch handles in the default security context when printing. */
+    RawSerial * pc;
+    if (!(pc = new RawSerial(USBTX, USBRX))) {
         return;
-    /* remember serial driver for IRQ routine */
+    }
+
+    /* Remember serial driver for IRQ routine. */
     uvisor_ctx->pc = pc;
 
-    /* allocate a box-specific LED */
-    if(!(uvisor_ctx->led = new DigitalOut(SECURE_LED)))
-        pc->printf("ERROR: failed to allocate memories for LED\n");
-    else
-    {
-        /* turn LED off by default */
+    /* Allocate a box-specific LED. */
+    if (!(uvisor_ctx->led = new DigitalOut(SECURE_LED))) {
+        pc->printf("ERROR: failed to allocate memories for LED\r\n");
+    } else {
+        /* Turn LED off by default */
         *uvisor_ctx->led = LED_OFF;
 
-        /* allocate a box-specific switch handler */
-        if(!(uvisor_ctx->sw = new InterruptIn(SW2)))
-            pc->printf("ERROR: failed to allocate memories for SW1\n");
-        else
-        {
-            /* register handler for switch SW1 */
-            uvisor_ctx->sw->mode(PullUp);
+        /* Allocate a box-specific switch handler. */
+        if (!(uvisor_ctx->sw = new InterruptIn(SECURE_SWITCH))) {
+            pc->printf("ERROR: failed to allocate memories for switch\r\n");
+        } else {
+            /* Register handler for switch. */
+            uvisor_ctx->sw->mode(SECURE_SWITCH_PULL);
             uvisor_ctx->sw->fall(my_box_switch_irq);
 
-            /* no problem to return here as everything is initialized */
+            /* No problem to return here as everything is initialized. */
             return;
         }
-
         delete uvisor_ctx->led;
     }
     delete pc;

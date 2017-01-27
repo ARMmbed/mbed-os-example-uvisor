@@ -1,5 +1,5 @@
 
-**** IRQ blinky uvisor-rtos example *****
+**** IRQ blinky uVisor example *****
 Main loop count: 0
 Main loop count: 1
 Main loop count: 2
