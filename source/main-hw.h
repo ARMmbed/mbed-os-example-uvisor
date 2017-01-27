@@ -75,6 +75,10 @@
         {(void *) 0x42000000, 0x01000000,      UVISOR_TACLDEF_PERIPH}, /* FIXME */ \
     }
 
+#else /* Target-specific settings */
+
+#error "Unsupported target. Checkout the README.md file for the list of supported targets for this app."
+
 #endif /* Target-specific settings */
 
 #endif /* __UVISOR_HELLOWORLD_MAIN_HW_H__ */
