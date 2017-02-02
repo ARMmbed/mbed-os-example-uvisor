@@ -9,7 +9,7 @@ Supported devices:
 | `K64F`         | `GCC_ARM` | `LED_BLUE`     | `LED_RED`      | `SW2`         | 9600      |
 | `DISCO_F429ZI` | `GCC_ARM` | `LED1`         | `LED2`         | `USER_BUTTON` | 9600      |
 
-Latest release: [mbed-os-5.3.0](https://github.com/ARMmbed/mbed-os-example-uvisor/releases/tag/mbed-os-5.3.0). Tested with [mbed-cli v1.0.0](https://github.com/ARMmbed/mbed-cli/releases/tag/1.0.0).
+Latest release: [mbed-os-5.3.x](https://github.com/ARMmbed/mbed-os-example-uvisor/releases/latest). Tested with [mbed-cli v1.0.0](https://github.com/ARMmbed/mbed-cli/releases/tag/1.0.0).
 
 ## Quickstart
 
