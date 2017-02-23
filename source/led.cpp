@@ -37,6 +37,12 @@ UVISOR_BOX_HEAPSIZE(3072);
 UVISOR_BOX_MAIN(my_box_main, osPriorityNormal, 1024);
 UVISOR_BOX_CONFIG(my_box, acl, 1024, my_box_context);
 
+/* FIXME: The guard is needed for backwards-compatibility reasons. Remove it
+ *        when mbed OS is updated. */
+#ifdef __uvisor_ctx
+#define uvisor_ctx ((my_box_context *) __uvisor_ctx)
+#endif
+
 static void my_box_switch_irq(void)
 {
     /* Flip LED state. */
