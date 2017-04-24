@@ -27,7 +27,7 @@ typedef struct {
 static const UvisorBoxAclItem acl[] = {
 };
 
-static void my_box_main(const void *);
+static void my_box_main(void *);
 
 /* Box configuration
  * We need 1kB of stack both in the main and interrupt threads as both of them
@@ -53,7 +53,7 @@ static void my_box_switch_irq(void)
                            (int) (*uvisor_ctx->led));
 }
 
-static void my_box_main(const void *)
+static void my_box_main(void *)
 {
     /* Allocate the serial port to ensure that code in this secure box won't
      * touch handles in the default security context when printing. */
