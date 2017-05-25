@@ -25,6 +25,12 @@ MAIN_ACL(g_main_acl);
 UVISOR_SET_MODE_ACL(UVISOR_ENABLED, g_main_acl);
 UVISOR_SET_PAGE_HEAP(8 * 1024, 5);
 
+/* Targets with an ARMv7-M MPU needs this space adjustment to prevent a runtime
+ * memory overflow error. The code below has been output directly by uVisor. */
+#if defined(TARGET_EFM32GG_STK3700) || defined(TARGET_DISCO_F429ZI)
+uint8_t __attribute__((section(".keep.uvisor.bss.boxes"), aligned(32))) __boxes_overhead[8064];
+#endif
+
 int main(void)
 {
     DigitalOut led(MAIN_LED);
