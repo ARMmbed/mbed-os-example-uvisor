@@ -92,7 +92,7 @@
         {EXTI,                sizeof(*EXTI),   UVISOR_TACLDEF_PERIPH}, \
         {GPIOG,               sizeof(*GPIOG),  UVISOR_TACLDEF_PERIPH}, \
         {SYSCFG,              sizeof(*SYSCFG), UVISOR_TACLDEF_PERIPH}, \
-        {(void *) 0x42000000, 0x01000000,      UVISOR_TACLDEF_PERIPH}, /* FIXME */ \
+        {(void *) 0x42000000, 0x01000000,      UVISOR_TACLDEF_PERIPH}, \
     }
 
 #else /* Target-specific settings */
