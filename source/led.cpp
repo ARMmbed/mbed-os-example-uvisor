@@ -49,8 +49,8 @@ static void my_box_switch_irq(void)
     *uvisor_ctx->led = !*uvisor_ctx->led;
 
     /* Print LED state on serial port. */
-    uvisor_ctx->pc->printf("\r\nPressed switch, printing from interrupt - LED changed to %i\r\n\r\n",
-                           (int) (*uvisor_ctx->led));
+    uvisor_ctx->pc->printf("\r\nPressed switch, printing from interrupt - LED now %s.\r\n\r\n",
+                           (int) (*uvisor_ctx->led) == LED_ON ? "on" : "off");
 }
 
 static void my_box_main(const void *)

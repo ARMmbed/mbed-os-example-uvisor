@@ -40,7 +40,7 @@ Main loop count: 1
 Main loop count: 2
 Main loop count: 3
 
-Pressed switch, printing from interrupt - LED changed to 0
+Pressed switch, printing from interrupt - LED now on.
 
 Main loop count: 4
 Main loop count: 5
