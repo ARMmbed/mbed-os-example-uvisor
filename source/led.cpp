@@ -21,7 +21,6 @@
 typedef struct {
     InterruptIn * sw;
     DigitalOut * led;
-    RawSerial * pc;
 } my_box_context;
 
 static const UvisorBoxAclItem acl[] = {
@@ -37,11 +36,7 @@ UVISOR_BOX_HEAPSIZE(3072);
 UVISOR_BOX_MAIN(my_box_main, osPriorityNormal, 1024);
 UVISOR_BOX_CONFIG(my_box, acl, 1024, my_box_context);
 
-/* FIXME: The guard is needed for backwards-compatibility reasons. Remove it
- *        when mbed OS is updated. */
-#ifdef __uvisor_ctx
 #define uvisor_ctx ((my_box_context *) __uvisor_ctx)
-#endif
 
 static void my_box_switch_irq(void)
 {
@@ -49,32 +44,22 @@ static void my_box_switch_irq(void)
     *uvisor_ctx->led = !*uvisor_ctx->led;
 
     /* Print LED state on serial port. */
-    uvisor_ctx->pc->printf("\r\nPressed switch, printing from interrupt - LED changed to %i\r\n\r\n",
-                           (int) (*uvisor_ctx->led));
+    printf("\r\nPressed switch, printing from interrupt - LED now %s.\r\n\r\n",
+           (int) (*uvisor_ctx->led) == LED_ON ? "on" : "off");
 }
 
 static void my_box_main(const void *)
 {
-    /* Allocate the serial port to ensure that code in this secure box won't
-     * touch handles in the default security context when printing. */
-    RawSerial * pc;
-    if (!(pc = new RawSerial(USBTX, USBRX))) {
-        return;
-    }
-
-    /* Remember serial driver for IRQ routine. */
-    uvisor_ctx->pc = pc;
-
     /* Allocate a box-specific LED. */
     if (!(uvisor_ctx->led = new DigitalOut(SECURE_LED))) {
-        pc->printf("ERROR: failed to allocate memories for LED\r\n");
+        printf("ERROR: failed to allocate memories for LED\r\n");
     } else {
         /* Turn LED off by default */
         *uvisor_ctx->led = LED_OFF;
 
         /* Allocate a box-specific switch handler. */
         if (!(uvisor_ctx->sw = new InterruptIn(SECURE_SWITCH))) {
-            pc->printf("ERROR: failed to allocate memories for switch\r\n");
+            printf("ERROR: failed to allocate memories for switch\r\n");
         } else {
             /* Register handler for switch. */
             uvisor_ctx->sw->mode(SECURE_SWITCH_PULL);
@@ -85,5 +70,4 @@ static void my_box_main(const void *)
         }
         delete uvisor_ctx->led;
     }
-    delete pc;
 }

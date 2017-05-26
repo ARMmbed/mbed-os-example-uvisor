@@ -45,6 +45,26 @@
         {SPI0,   sizeof(*SPI0),   UVISOR_TACLDEF_PERIPH}, \
     }
 
+#elif defined(TARGET_EFM32GG_STK3700)
+
+#define MAIN_LED           LED1
+#define SECURE_LED         LED2
+#define LED_ON             true
+#define LED_OFF            false
+#define SECURE_SWITCH      SW0
+#define SECURE_SWITCH_PULL PullUp
+
+#define MAIN_ACL(acl_list_name) \
+    static const UvisorBoxAclItem acl_list_name[] = {     \
+        {CMU,                 sizeof(*CMU),    UVISOR_TACLDEF_PERIPH}, \
+        {MSC,                 sizeof(*MSC),    UVISOR_TACLDEF_PERIPH}, \
+        {GPIO,                sizeof(*GPIO),   UVISOR_TACLDEF_PERIPH}, \
+        {TIMER0,              sizeof(*TIMER0), UVISOR_TACLDEF_PERIPH}, \
+        {UART0,               sizeof(*UART0),  UVISOR_TACLDEF_PERIPH}, \
+        {(void *) 0x0FE08000, 0x1000,          UVISOR_TACLDEF_PERIPH}, \
+        {(void *) 0x42000000, 0x2000000,       UVISOR_TACLDEF_PERIPH}, \
+    }
+
 #elif defined(TARGET_DISCO_F429ZI)
 
 #define MAIN_LED           LED1
@@ -72,7 +92,7 @@
         {EXTI,                sizeof(*EXTI),   UVISOR_TACLDEF_PERIPH}, \
         {GPIOG,               sizeof(*GPIOG),  UVISOR_TACLDEF_PERIPH}, \
         {SYSCFG,              sizeof(*SYSCFG), UVISOR_TACLDEF_PERIPH}, \
-        {(void *) 0x42000000, 0x01000000,      UVISOR_TACLDEF_PERIPH}, /* FIXME */ \
+        {(void *) 0x42000000, 0x01000000,      UVISOR_TACLDEF_PERIPH}, \
     }
 
 #else /* Target-specific settings */
