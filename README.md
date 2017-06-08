@@ -26,7 +26,7 @@ You will find the resulting binary in `BUILD/K64F/GCC_ARM/mbed-os-example-uvisor
 
 Press the reset button. You will see the public box LED blinking. Whenever you press the user button, the secure box LED will toggle. This interrupt is being served in the secure box and cannot be tampered with by the public box.
 
-If you want, you can also read the output on the serial port:
+If you want, you can also read the output on the serial port. The example below is using the program "screen", and is connected to port tty.usbmodem1422, with a baud rate of 9600.  To determine the proper port your board is connected to, you can run the command 'mbed detect':
 
 ```bash
 $ screen /dev/tty.usbmodem1422 9600
