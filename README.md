@@ -1,5 +1,7 @@
 # uVisor IRQ blinky example
 
+[![Build Status](https://travis-ci.org/ARMmbed/mbed-os-example-uvisor.svg?branch=master)](https://travis-ci.org/ARMmbed/mbed-os-example-uvisor)
+
 This is a simple example to show how to write a uVisor-secured threaded application with IRQ support. One LED blinks periodically from the public box main thread. The second LED is exclusively owned by a secure box and toggles when the user button is pressed.
 
 Supported devices:
