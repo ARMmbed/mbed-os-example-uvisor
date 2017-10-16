@@ -33,4 +33,3 @@ install:
 - sudo pip install pylint
 - sudo pip install hypothesis
 - sudo pip install mock
-
