@@ -17,6 +17,7 @@
 #include "uvisor-lib/uvisor-lib.h"
 #include "mbed.h"
 #include "main-hw.h"
+#include "mem_map.h"
 
 /* Create ACLs for main box. */
 MAIN_ACL(g_main_acl);
@@ -24,6 +25,26 @@ MAIN_ACL(g_main_acl);
 /* Enable uVisor. */
 UVISOR_SET_MODE_ACL(UVISOR_ENABLED, g_main_acl);
 UVISOR_SET_PAGE_HEAP(8 * 1024, 5);
+
+static void example_halt_error(THaltError reason, const THaltInfo *halt_info);
+
+UVISOR_PUBLIC_BOX_DEBUG_DRIVER(example_halt_error);
+
+static void example_halt_error(THaltError reason, const THaltInfo *halt_info) {
+
+	const MemMap * map = NULL;
+	if (halt_info->bfar) {
+		map = memory_map_name(halt_info->bfar);
+	}
+
+	printf("\n");
+	printf("  Address:           0x%08X\n", halt_info->bfar);
+	printf("  Region/Peripheral: %s\n", (map ? map->name : "[not available]"));
+	printf("    Base address:    0x%08X\n", (map ? map->base : halt_info->bfar));
+	printf("    End address:     0x%08X\n", (map ? map->end : halt_info->bfar));
+
+	return;
+}
 
 /* Targets with an ARMv7-M MPU needs this space adjustment to prevent a runtime
  * memory overflow error. The code below has been output directly by uVisor. */
