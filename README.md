@@ -12,8 +12,6 @@ Supported devices:
 | `DISCO_F429ZI`    | `GCC_ARM` | `LED1`         | `LED2`         | `USER_BUTTON` | 9600      |
 | `EFM32GG_STK3700` | `GCC_ARM` | `LED1`         | `LED2`         | `SW0`         | 9600      |
 
-Latest release: [mbed-os-5.4.x](https://github.com/ARMmbed/mbed-os-example-uvisor/releases/latest). Tested with [mbed-cli v1.0.0](https://github.com/ARMmbed/mbed-cli/releases/tag/1.0.0).
-
 ## Quickstart
 
 The instructions here are specific to the `K64F` target, but can be easily extended to other supported targets as well.
@@ -61,4 +59,8 @@ $ mbed compile -m K64F -t GCC_ARM --profile mbed-os/tools/profiles/debug.json -c
 ## Known issues
 
 - Use of exporters for multiple IDEs is not supported at the moment.
+
+## Troubleshooting
+
+If you have problems, you can review the [documentation](https://os.mbed.com/docs/latest/tutorials/debugging.html) for suggestions on what could be wrong and how to fix it.
 
