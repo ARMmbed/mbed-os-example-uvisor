@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/ARMmbed/mbed-os-example-uvisor.svg?branch=master)](https://travis-ci.org/ARMmbed/mbed-os-example-uvisor)
 
+<span class="warnings">**Warning**: uVisor is superseded by the Secure Partition Manager (SPM) defined in the ARM Platform Security Architecture (PSA). uVisor is deprecated as of Mbed OS 5.10, and being replaced by a native PSA-compliant implementation of SPM.</span>
+
 This is a simple example to show how to write a uVisor-secured threaded application with IRQ support. One LED blinks periodically from the public box main thread. The second LED is exclusively owned by a secure box and toggles when the user button is pressed.
 
 Supported devices:
